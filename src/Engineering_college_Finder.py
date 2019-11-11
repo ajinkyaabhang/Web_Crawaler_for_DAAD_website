@@ -22,19 +22,22 @@ from selenium.webdriver.support.select import Select
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import ElementNotVisibleException
+from selenium.common.exceptions import ElementClickInterceptedException
 
-driver = webdriver.Chrome("chromedriver")
+driver = webdriver.Chrome(r"C:\Users\ajink\Desktop\web_scrapping\chromedriver")
 driver.get("https://www.daad.de/deutschland/studienangebote/international-programmes/en/")
 university_link =[]
 #que=driver.find_element_by_xpath("//input[@name='q']")
 que=driver.find_element_by_xpath('//*[@id="suggest"]')
-que.send_keys("Civil Engineering")
+que.send_keys("Information Technology")
 time.sleep(2)
 que.send_keys(Keys.ARROW_DOWN)
 #que.send_keys(Keys.ARROW_DOWN)
+#time.sleep(2)
 
 que.send_keys(Keys.RETURN)
-time.sleep(2)
+time.sleep(10)
+#driver.find_element_by_css_selector('#search-form-homepage > div.c-hero__content.no-gutters > div.col-12.col-lg-9.col-xl-7.mx-auto > div > div.c-search > form > div.row > div:nth-child(1) > div > fieldset > div > button > span').click()
 driver.find_element_by_xpath('//*[@class="multiselect-selected-text"]').click()
 time.sleep(2)
 driver.find_element_by_xpath('//*[@id="search-form-homepage"]/div[2]/div[2]/div/div[2]/form/div[2]/div[1]/div/fieldset/div/ul/li[2]/label/input').click()
@@ -50,7 +53,7 @@ time.sleep(2)
 #que.send_keys(Keys.RETURN)
 que.submit()
 time.sleep(3)
-
+'''
 #------------------------------------------------------civil--------------
 driver.find_element_by_xpath('//*[@id="filterSelects"]/div[3]/div[2]/button').click()
 time.sleep(3)
@@ -67,7 +70,7 @@ time.sleep(3)
 driver.find_element_by_xpath('//*[@id="filterSelects"]/div[3]/div[2]/button').click()
 time.sleep(3)
 #-----------------------------civil----------------------------------
-
+'''
 #Advance Search
 driver.find_element_by_xpath('//*[@id="c-filterbar"]/div[2]/button/i').click()
 time.sleep(4)
@@ -78,11 +81,12 @@ time.sleep(4)
 driver.find_element_by_xpath('//*[@id="additionalFilterSelects"]/div/div[2]/div/div[2]/ul/li[1]/label/input').click()
 time.sleep(4)
 
+'''
 #Select the Winter Semester
 
 driver.find_element_by_xpath('//*[@id="additionalFilterSelects"]/div/div[2]/div/div[2]/ul/li[2]/label/input').click()
 time.sleep(4)
-
+'''
 while True:
     try:
         list_links = driver.find_elements_by_xpath('//*[@class="list-inline-item mr-0 js-course-detail-link"]')
@@ -111,6 +115,7 @@ driver.quit()
 #print(university_link)
 
 Name = []
+Course = []
 Course_website = []
 Degree = []
 Teaching_language = []
@@ -143,7 +148,14 @@ for link in university_link:
     Name_text = '\n'.join(Uchunk for Uchunk in Uchunks if Uchunk)
     Name.append(Name_text)
     #print(Name)
-
+    
+    University_course = soup.find('span', attrs={'class':'d-sm-none'})
+    Course_text = University_course.get_text()
+    Clines = (Cline.strip() for Cline in Course_text.splitlines())
+    Cchunks = (Cphrase.strip() for Cline in Clines for Cphrase in Cline.split("  "))
+    Course_text = '\n'.join(Cchunk for Cchunk in Cchunks if Cchunk)
+    Course.append(Course_text)
+            
     University_title = soup.find_all('dt', attrs={'class':'c-description-list__content'})
     for Tname in University_title :
         Ttext = Tname.get_text()
@@ -228,13 +240,13 @@ for link in university_link:
     print(i)
     
 print('---start preparing Excel---')
-mapped = list(zip(Name, Course_website, Degree, Teaching_language, Languages, Programme_duration,
+mapped = list(zip(Name, Course, Course_website, Degree, Teaching_language, Languages, Programme_duration,
                           Beginning, Application_deadline, Tuition_fees_per_semester_in_EUR,
                           Semester_contribution,
                           Academic_Admission_Requirements, Language_requirements))
-df = pd.DataFrame(mapped,columns=['Name', 'Course_website', 'Degree', 'Teaching language','Languages','Programme duration','Beginning','Application deadline',
+df = pd.DataFrame(mapped,columns=['Name', 'Course', 'Course_website', 'Degree', 'Teaching language','Languages','Programme duration','Beginning','Application deadline',
                            'Tuition fees per semester in EUR','Semester_contribution',
                            'Academic_Admission_Requirements','Language_requirements'])
 #time.sleep(2)
-df.to_excel('Civil.xlsx', index=False ,encoding='utf-8')
+df.to_excel('IT.xlsx', index=False ,encoding='utf-8')
 print('---done---')
