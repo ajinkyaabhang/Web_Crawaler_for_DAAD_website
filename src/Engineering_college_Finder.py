@@ -29,7 +29,7 @@ driver.get("https://www.daad.de/deutschland/studienangebote/international-progra
 university_link =[]
 #que=driver.find_element_by_xpath("//input[@name='q']")
 que=driver.find_element_by_xpath('//*[@id="suggest"]')
-que.send_keys("Information Technology")
+que.send_keys("Electrical Engineering")
 time.sleep(2)
 que.send_keys(Keys.ARROW_DOWN)
 #que.send_keys(Keys.ARROW_DOWN)
@@ -248,5 +248,5 @@ df = pd.DataFrame(mapped,columns=['Name', 'Course', 'Course_website', 'Degree', 
                            'Tuition fees per semester in EUR','Semester_contribution',
                            'Academic_Admission_Requirements','Language_requirements'])
 #time.sleep(2)
-df.to_excel('IT.xlsx', index=False ,encoding='utf-8')
+df.to_excel('Electrical_Engineering.xlsx', index=False ,encoding='utf-8')
 print('---done---')
